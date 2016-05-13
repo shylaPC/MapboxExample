@@ -1,0 +1,31 @@
+PODS:
+  - MapboxGeocoder.swift (0.4.0):
+    - NBNRequestKit
+  - NBNRequestKit (0.3.0)
+
+DEPENDENCIES:
+  - MapboxGeocoder.swift (from `https://github.com/mapbox/MapboxGeocoder.swift.git`,
+    branch `master`)
+  - NBNRequestKit (from `https://github.com/1ec5/RequestKit.git`, branch `mapbox-podspec`)
+
+EXTERNAL SOURCES:
+  MapboxGeocoder.swift:
+    :branch: master
+    :git: https://github.com/mapbox/MapboxGeocoder.swift.git
+  NBNRequestKit:
+    :branch: mapbox-podspec
+    :git: https://github.com/1ec5/RequestKit.git
+
+CHECKOUT OPTIONS:
+  MapboxGeocoder.swift:
+    :commit: 4e4a6a5369212c572e7ec0e764cfe7cf4a4d4293
+    :git: https://github.com/mapbox/MapboxGeocoder.swift.git
+  NBNRequestKit:
+    :commit: 77220407aa576e70232e4300a01d31870345b275
+    :git: https://github.com/1ec5/RequestKit.git
+
+SPEC CHECKSUMS:
+  MapboxGeocoder.swift: de6083cfbac7a4e6bb6696fd1c4c4dfc04f18a30
+  NBNRequestKit: 300c68172965d586ac6e0cefbe5a4fe415b71dbf
+
+COCOAPODS: 0.39.0
