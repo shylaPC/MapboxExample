@@ -10,10 +10,16 @@
 @import CoreLocation;
 @import MapboxGeocoder;
 @import Mapbox;
+#import "PlaceRegion.h"
+#import "Place.h"
 
-@interface ViewController ()<MGLMapViewDelegate>
+@interface ViewController ()<MGLMapViewDelegate,UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating,UITableViewDataSource,UITableViewDelegate>
+{
+    NSMutableArray *searchResultArr;
+}
 @property (nonatomic) UIProgressView *progressView;
 @property (strong, nonatomic) IBOutlet MGLMapView *mapView;
+@property (strong, nonatomic) UISearchController *searchController;
 
 @end
 
@@ -21,13 +27,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [super viewDidLoad];
+    searchResultArr= [[NSMutableArray alloc]init];
+    searchTable.allowsMultipleSelectionDuringEditing = NO;
+    _searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
+    self.searchController.searchResultsUpdater = self;
+    [self.searchController.searchBar sizeToFit];
+    searchTable.tableHeaderView = self.searchController.searchBar;
+    self.searchController.delegate = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO;// default is YES
+    self.definesPresentationContext = YES;
     MGLPointAnnotation *point = [[MGLPointAnnotation alloc] init];
     //point.coordinate = CLLocationCoordinate2DMake(12.9716, 77.5946);
     //  point.coordinate = CLLocationCoordinate2DMake(77.5946,12.9716);
     point.title = @"Bengaluru";
     point.subtitle = @" check it ";
     [self.mapView addAnnotation:point];
-    self.mapView.delegate = self;
+    //self.mapView.delegate = self;
     
     // Geocoding
     [self jjjj];
@@ -64,6 +81,15 @@
 -(void)jjjj{
     [self Webservice:@"jkjlj" success:^(NSDictionary *contentResponse) {
         NSLog(@" Response %@",contentResponse);
+        
+        PlaceRegion *placeInfo = [[PlaceRegion alloc] initWithJSON:contentResponse];
+        [searchResultArr addObjectsFromArray:placeInfo.placeInfoArr];
+        NSLog(@" placeInfo %@",placeInfo);
+        NSLog(@" searchResultArr %lu",(unsigned long)[searchResultArr count]);
+
+        [self setTableViewheightOfTable:searchTable ByArrayName:searchResultArr];
+        [searchTable reloadData];
+
     }
              failure:^(NSError *error) {
                  NSLog(@"faiilure");
@@ -172,7 +198,7 @@
 
 
 -(void)Webservice:(NSString *)emailID success:(void (^)(NSDictionary *contentResponse))success failure:(void (^)(NSError *error))failure{
-    QueryStr=@"Banashankari, Bangalore";
+    QueryStr=@"basavangudi";
     NSString *escapedString = [QueryStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLHostAllowedCharacterSet]];
     NSLog(@"escapedString: %@", escapedString);
     //  NSString *urlStr= @"https://api.mapbox.com/geocoding/v5/mapbox.places";
@@ -191,7 +217,9 @@
             
         }
     }];
-}
+    
+    
+   }
 
 
 -(NSMutableURLRequest*)getUrlFor:(NSString*)strUrl andData:(NSData*)data
@@ -214,4 +242,146 @@
     return urlRequest;
 }
 
+
+#pragma mark - UISearchControllerDelegate
+
+// Called after the search controller's search bar has agreed to begin editing or when
+// 'active' is set to YES.
+// If you choose not to present the controller yourself or do not implement this method,
+// a default presentation is performed on your behalf.
+//
+// Implement this method if the default presentation is not adequate for your purposes.
+//
+- (void)presentSearchController:(UISearchController *)searchController {
+    
+}
+
+- (void)willPresentSearchController:(UISearchController *)searchController {
+    // do something before the search controller is presented
+    self.navigationController.navigationBar.translucent = YES;
+}
+
+- (void)didPresentSearchController:(UISearchController *)searchController {
+    // do something after the search controller is presented
+}
+
+- (void)willDismissSearchController:(UISearchController *)searchController {
+    // do something before the search controller is dismissed
+    self.navigationController.navigationBar.translucent = YES;
+}
+
+- (void)didDismissSearchController:(UISearchController *)searchController {
+    
+//    [self.arrData removeAllObjects];
+//    self.arrData = [self.arrServerData mutableCopy];
+//    [self.sections removeAllObjects];
+//    NSLog(@"%ld %ld",[self.arrServerData count],[self.arrData count]);
+//    [self assignDictonarytoTable];
+}
+
+#pragma mark - UISearchResultsUpdating
+
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    // update the filtered array based on the search text
+    NSString *searchText = searchController.searchBar.text;
+    NSMutableArray *searchResults = [self.searchController mutableCopy];
+    
+    // strip out all the leading and trailing spaces
+    NSString *strippedString = [searchText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    // break up the search terms (separated by spaces)
+    NSArray *searchItems = nil;
+    if (strippedString.length > 0) {
+        searchItems = [strippedString componentsSeparatedByString:@" "];
+    }
+    
+    // build all the "AND" expressions for each value in the searchString
+    //
+    NSMutableArray *andMatchPredicates = [NSMutableArray array];
+    
+    for (NSString *searchString in searchItems) {
+        
+        NSMutableArray *searchItemsPredicate = [NSMutableArray array];
+        
+        NSExpression *lhs = [NSExpression expressionForKeyPath:@"strName"];
+        NSExpression *rhs = [NSExpression expressionForConstantValue:searchString];
+        NSPredicate *finalPredicate = [NSComparisonPredicate
+                                       predicateWithLeftExpression:lhs
+                                       rightExpression:rhs
+                                       modifier:NSDirectPredicateModifier
+                                       type:NSContainsPredicateOperatorType
+                                       options:NSCaseInsensitivePredicateOption];
+        [searchItemsPredicate addObject:finalPredicate];
+        
+        
+        // at this OR predicate to our master AND predicate
+        NSCompoundPredicate *orMatchPredicates = [NSCompoundPredicate orPredicateWithSubpredicates:searchItemsPredicate];
+        [andMatchPredicates addObject:orMatchPredicates];
+    }
+    
+    // match up the fields of the Product object
+    NSCompoundPredicate *finalCompoundPredicate =
+    [NSCompoundPredicate andPredicateWithSubpredicates:andMatchPredicates];
+    searchResults = [[searchResults filteredArrayUsingPredicate:finalCompoundPredicate] mutableCopy];
+    
+//    [self.arrData removeAllObjects];
+//    [self.sections removeAllObjects];
+//    self.arrData = searchResults;
+//    [self assignDictonarytoTable];
+}
+
+
+
+#pragma mark - UITableView Methods
+
+-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    NSLog(@" rows : %ld ",[searchResultArr count]);
+    return [searchResultArr count];
+}
+
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+    if (cell == nil) {
+        
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
+    }
+    
+    NSString *placeName;
+    double lati,longi;
+    Place *place =[[Place alloc]init];
+    place = [searchResultArr objectAtIndex:indexPath.row];
+
+    cell.textLabel.text = place.nameRegion;
+   // cell.detailTextLabel.text=[NSString stringWithFormat:@"%f %f ",lati,longi];
+    return cell;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    Place *place =[[Place alloc]init];
+    place = [searchResultArr objectAtIndex:indexPath.row];
+    
+    MGLPointAnnotation *point = [[MGLPointAnnotation alloc] init];
+    point.coordinate = CLLocationCoordinate2DMake(place.latitude, place.longitud
+                                                  );
+    //  point.coordinate = CLLocationCoordinate2DMake(77.5946,12.9716);
+    point.title = place.nameRegion;
+    point.subtitle = @" check it ";
+    [self.mapView addAnnotation:point];
+}
+
+-(void)setTableViewheightOfTable :(UITableView *)tableView ByArrayName:(NSArray *)array
+{
+    CGFloat height = searchTable.rowHeight+200;
+    height *= array.count;
+    
+    CGRect tableFrame = tableView.frame;
+    tableFrame.size.height = height;
+    searchTable.frame = tableFrame;
+   // [searchTable layoutIfNeeded];
+
+}
 @end

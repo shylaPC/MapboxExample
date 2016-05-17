@@ -16,6 +16,7 @@
     NSString *Country;
     double *proximity;
     
+    __weak IBOutlet UITableView *searchTable;
 }
 
 @end

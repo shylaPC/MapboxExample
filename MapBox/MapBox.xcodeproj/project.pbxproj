@@ -15,6 +15,8 @@
 		17141DE61CD35BD9003BDA1F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 17141DE41CD35BD9003BDA1F /* LaunchScreen.storyboard */; };
 		17141DF01CD360F2003BDA1F /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17141DEF1CD360F2003BDA1F /* Mapbox.framework */; };
 		17141DF11CD360F2003BDA1F /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 17141DEF1CD360F2003BDA1F /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		17BCED6B1CE5EA9D0044A111 /* PlaceRegion.m in Sources */ = {isa = PBXBuildFile; fileRef = 17BCED6A1CE5EA9D0044A111 /* PlaceRegion.m */; };
+		17BCED6E1CE5EDAD0044A111 /* Place.m in Sources */ = {isa = PBXBuildFile; fileRef = 17BCED6D1CE5EDAD0044A111 /* Place.m */; };
 		17E827801CDCB83F000448E2 /* MapboxGeocoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17E8277F1CDCB83F000448E2 /* MapboxGeocoder.framework */; };
 		17E827821CDCB86B000448E2 /* RequestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 17E827811CDCB86B000448E2 /* RequestKit.framework */; };
 		36FC47F9A4949E042A963E26 /* Pods_MapBox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 961C811F6A82077E2F87F912 /* Pods_MapBox.framework */; };
@@ -47,6 +49,10 @@
 		17141DE51CD35BD9003BDA1F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		17141DE71CD35BD9003BDA1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		17141DEF1CD360F2003BDA1F /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
+		17BCED691CE5EA9C0044A111 /* PlaceRegion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlaceRegion.h; sourceTree = "<group>"; };
+		17BCED6A1CE5EA9D0044A111 /* PlaceRegion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlaceRegion.m; sourceTree = "<group>"; };
+		17BCED6C1CE5EDAD0044A111 /* Place.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Place.h; sourceTree = "<group>"; };
+		17BCED6D1CE5EDAD0044A111 /* Place.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Place.m; sourceTree = "<group>"; };
 		17E8277F1CDCB83F000448E2 /* MapboxGeocoder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxGeocoder.framework; path = "Pods/../build/Debug-iphoneos/MapboxGeocoder.framework"; sourceTree = "<group>"; };
 		17E827811CDCB86B000448E2 /* RequestKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RequestKit.framework; path = "Pods/../build/Debug-iphoneos/RequestKit.framework"; sourceTree = "<group>"; };
 		961C811F6A82077E2F87F912 /* Pods_MapBox.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MapBox.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +100,10 @@
 				17141DDA1CD35BD9003BDA1F /* AppDelegate.m */,
 				17141DDC1CD35BD9003BDA1F /* ViewController.h */,
 				17141DDD1CD35BD9003BDA1F /* ViewController.m */,
+				17BCED691CE5EA9C0044A111 /* PlaceRegion.h */,
+				17BCED6A1CE5EA9D0044A111 /* PlaceRegion.m */,
+				17BCED6C1CE5EDAD0044A111 /* Place.h */,
+				17BCED6D1CE5EDAD0044A111 /* Place.m */,
 				17141DDF1CD35BD9003BDA1F /* Main.storyboard */,
 				17141DE21CD35BD9003BDA1F /* Assets.xcassets */,
 				17141DE41CD35BD9003BDA1F /* LaunchScreen.storyboard */,
@@ -253,7 +263,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				17BCED6E1CE5EDAD0044A111 /* Place.m in Sources */,
 				17141DDE1CD35BD9003BDA1F /* ViewController.m in Sources */,
+				17BCED6B1CE5EA9D0044A111 /* PlaceRegion.m in Sources */,
 				17141DDB1CD35BD9003BDA1F /* AppDelegate.m in Sources */,
 				17141DD81CD35BD9003BDA1F /* main.m in Sources */,
 			);
